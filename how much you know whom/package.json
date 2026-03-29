@@ -1,0 +1,8 @@
+{
+  "name": "how-much-you-know-whom",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  }
+}

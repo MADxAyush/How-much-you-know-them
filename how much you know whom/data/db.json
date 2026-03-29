@@ -1,0 +1,295 @@
+{
+  "quizzes": {
+    "quiz_52de43caed57": {
+      "id": "quiz_52de43caed57",
+      "ownerName": "Test Owner",
+      "ownerToken": "owner_fa390b1bba4a",
+      "answers": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
+      "createdAt": "2026-03-29T12:59:45.584Z"
+    },
+    "quiz_d8afe8869a66": {
+      "id": "quiz_d8afe8869a66",
+      "ownerName": "Creator Check",
+      "ownerToken": "owner_add65f90f4fa",
+      "answers": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "createdAt": "2026-03-29T13:08:49.571Z"
+    }
+  },
+  "attempts": {
+    "quiz_52de43caed57": [
+      {
+        "id": "attempt_7041648e8e80",
+        "quizId": "quiz_52de43caed57",
+        "deviceId": "device-test-1",
+        "playerName": "Friend One",
+        "guesses": [
+          "A",
+          "B",
+          "X",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J"
+        ],
+        "score": 9,
+        "total": 10,
+        "breakdown": [
+          {
+            "questionNumber": 1,
+            "correctAnswer": "A",
+            "guess": "A",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 2,
+            "correctAnswer": "B",
+            "guess": "B",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 3,
+            "correctAnswer": "C",
+            "guess": "X",
+            "isCorrect": false
+          },
+          {
+            "questionNumber": 4,
+            "correctAnswer": "D",
+            "guess": "D",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 5,
+            "correctAnswer": "E",
+            "guess": "E",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 6,
+            "correctAnswer": "F",
+            "guess": "F",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 7,
+            "correctAnswer": "G",
+            "guess": "G",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 8,
+            "correctAnswer": "H",
+            "guess": "H",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 9,
+            "correctAnswer": "I",
+            "guess": "I",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 10,
+            "correctAnswer": "J",
+            "guess": "J",
+            "isCorrect": true
+          }
+        ],
+        "createdAt": "2026-03-29T13:00:00.416Z"
+      }
+    ],
+    "quiz_d8afe8869a66": [
+      {
+        "id": "attempt_b3314569a11f",
+        "quizId": "quiz_d8afe8869a66",
+        "deviceId": "device-player-2",
+        "playerName": "Player Two",
+        "guesses": [
+          "A1",
+          "wrong",
+          "A3",
+          "wrong",
+          "A5",
+          "A6",
+          "A7",
+          "wrong",
+          "A9",
+          "wrong"
+        ],
+        "score": 6,
+        "total": 10,
+        "breakdown": [
+          {
+            "questionNumber": 1,
+            "correctAnswer": "A1",
+            "guess": "A1",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 2,
+            "correctAnswer": "A2",
+            "guess": "wrong",
+            "isCorrect": false
+          },
+          {
+            "questionNumber": 3,
+            "correctAnswer": "A3",
+            "guess": "A3",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 4,
+            "correctAnswer": "A4",
+            "guess": "wrong",
+            "isCorrect": false
+          },
+          {
+            "questionNumber": 5,
+            "correctAnswer": "A5",
+            "guess": "A5",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 6,
+            "correctAnswer": "A6",
+            "guess": "A6",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 7,
+            "correctAnswer": "A7",
+            "guess": "A7",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 8,
+            "correctAnswer": "A8",
+            "guess": "wrong",
+            "isCorrect": false
+          },
+          {
+            "questionNumber": 9,
+            "correctAnswer": "A9",
+            "guess": "A9",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 10,
+            "correctAnswer": "A10",
+            "guess": "wrong",
+            "isCorrect": false
+          }
+        ],
+        "createdAt": "2026-03-29T13:09:05.001Z"
+      },
+      {
+        "id": "attempt_341f431af502",
+        "quizId": "quiz_d8afe8869a66",
+        "deviceId": "device-player-1",
+        "playerName": "Player One",
+        "guesses": [
+          "A1",
+          "A2",
+          "A3",
+          "A4",
+          "A5",
+          "A6",
+          "A7",
+          "A8",
+          "A9",
+          "A10"
+        ],
+        "score": 10,
+        "total": 10,
+        "breakdown": [
+          {
+            "questionNumber": 1,
+            "correctAnswer": "A1",
+            "guess": "A1",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 2,
+            "correctAnswer": "A2",
+            "guess": "A2",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 3,
+            "correctAnswer": "A3",
+            "guess": "A3",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 4,
+            "correctAnswer": "A4",
+            "guess": "A4",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 5,
+            "correctAnswer": "A5",
+            "guess": "A5",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 6,
+            "correctAnswer": "A6",
+            "guess": "A6",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 7,
+            "correctAnswer": "A7",
+            "guess": "A7",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 8,
+            "correctAnswer": "A8",
+            "guess": "A8",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 9,
+            "correctAnswer": "A9",
+            "guess": "A9",
+            "isCorrect": true
+          },
+          {
+            "questionNumber": 10,
+            "correctAnswer": "A10",
+            "guess": "A10",
+            "isCorrect": true
+          }
+        ],
+        "createdAt": "2026-03-29T13:09:05.101Z"
+      }
+    ]
+  }
+}
