@@ -1,58 +1,3 @@
-// document.querySelectorAll(".blocks, .blocks1, .blocks2, .blocks3")
-// .forEach(box => {
-//     box.addEventListener("click", () => {
-
-//         const value = box.dataset.value;
-
-//         // store answer
-//         let answers = JSON.parse(localStorage.getItem("answers")) || [];
-//         answers.push(value);
-//         localStorage.setItem("answers", JSON.stringify(answers));
-
-//         // go to next page
-//         window.location.href = "question2.html";
-//     });
-// });
-
-// const boxes = document.querySelectorAll(".blocks, .blocks1, .blocks2, .blocks3");
-
-// boxes.forEach(box => {
-//     box.addEventListener("click", () => {
-
-//         // get previous answers
-//         let answers = JSON.parse(localStorage.getItem("answers")) || [];
-
-//         // get clicked value
-//         let value = box.getAttribute("data-value");
-
-//         // store it
-//         answers.push(value);
-//         localStorage.setItem("answers", JSON.stringify(answers));
-
-//         // 🔥 go to next page
-//         window.location.href = "question2.html";
-//     });
-// });
-
-
-// const boxes = document.querySelectorAll(".blocks, .blocks1, .blocks2, .blocks3");
-// const nextPage = document.body.dataset.next;
-
-// boxes.forEach(box => {
-//     box.addEventListener("click", () => {
-//         let answers = JSON.parse(localStorage.getItem("answers")) || [];
-//         let value = box.dataset.value;
-
-//         answers.push(value);
-//         localStorage.setItem("answers", JSON.stringify(answers));
-
-//         if (nextPage) {
-//             window.location.href = nextPage;
-//         }
-//     });
-// });
-
-
 const QUESTIONS = [
     "Favorite color",
     "Favorite sport",
@@ -90,6 +35,7 @@ const resultList = document.getElementById("resultList");
 const historyList = document.getElementById("historyList");
 const historyNote = document.getElementById("historyNote");
 const createOwnLink = document.getElementById("createOwnLink");
+const ownerSummaryLink = document.getElementById("ownerSummaryLink");
 
 function readObject(key) {
     try {
@@ -193,9 +139,9 @@ function saveHistory(entry) {
     localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, 20)));
 }
 
-function readOwnedQuiz(quizId) {
+function readOwnedQuiz(activeQuizId) {
     const ownedQuizzes = readObject(OWNER_QUIZZES_KEY);
-    return quizId ? ownedQuizzes[quizId] || null : null;
+    return activeQuizId ? ownedQuizzes[activeQuizId] || null : null;
 }
 
 function saveOwnedQuiz(entry) {
@@ -213,9 +159,9 @@ function saveOwnedQuiz(entry) {
     writeObject(OWNER_QUIZZES_KEY, ownedQuizzes);
 }
 
-function readDeviceAttempt(quizId) {
+function readDeviceAttempt(activeQuizId) {
     const attempts = readObject(DEVICE_ATTEMPTS_KEY);
-    return quizId ? attempts[quizId] || null : null;
+    return activeQuizId ? attempts[activeQuizId] || null : null;
 }
 
 function saveDeviceAttempt(entry) {
@@ -235,11 +181,11 @@ function formatQuizOwner(ownerName) {
     return ownerName ? `${ownerName}'s quiz` : "this quiz";
 }
 
-function historyForQuiz(quizId) {
-    return readHistory().filter(item => item.quizId === quizId);
+function historyForQuiz(activeQuizId) {
+    return readHistory().filter(item => item.quizId === activeQuizId);
 }
 
-function ensureNameGate(isPlayMode, ownerName, playerName, attemptId) {
+function ensureNameGate(isPlayMode, ownerName, playerName, attemptId, activeQuizId, quizAnswers, guesses, answers) {
     if (!questionNumber) {
         return false;
     }
@@ -293,15 +239,15 @@ function ensureNameGate(isPlayMode, ownerName, playerName, attemptId) {
                 owner: ownerName,
                 player: enteredName,
                 attempt: attemptId || createAttemptId(),
-                quizId,
-                quiz: readArray("quiz"),
-                guesses: readArray("guesses")
+                quizId: activeQuizId,
+                quiz: quizAnswers,
+                guesses
             });
         } else {
             window.location.href = buildUrl(currentPageName(), {
                 owner: enteredName,
-                quizId: quizId || createQuizId(),
-                answers: readArray("answers")
+                quizId: activeQuizId || createQuizId(),
+                answers
             });
         }
     });
@@ -337,9 +283,7 @@ function setQuestionMeta(isPlayMode, ownerName, playerName) {
     questionCount.insertAdjacentElement("beforebegin", meta);
 }
 
-function setSharePage(ownerName) {
-    const answers = readArray("answers");
-
+function setSharePage(ownerName, activeQuizId, answers) {
     if (quizTitle) {
         quizTitle.textContent = ownerName ? `Share ${ownerName}'s Quiz` : "Share Your Quiz";
     }
@@ -361,16 +305,22 @@ function setSharePage(ownerName) {
         return;
     }
 
-    const activeQuizId = quizId || createQuizId();
+    const quizIdToUse = activeQuizId || createQuizId();
     const playUrl = buildUrl("index.html", {
         mode: "play",
         owner: ownerName,
-        quizId: activeQuizId,
+        quizId: quizIdToUse,
+        quiz: answers
+    });
+    const ownerUrl = buildUrl("result.html", {
+        mode: "owner",
+        owner: ownerName,
+        quizId: quizIdToUse,
         quiz: answers
     });
 
     saveOwnedQuiz({
-        quizId: activeQuizId,
+        quizId: quizIdToUse,
         ownerName,
         answers
     });
@@ -389,14 +339,33 @@ function setSharePage(ownerName) {
         shareLink.href = playUrl;
         shareLink.textContent = "Open shared quiz";
     }
+
+    if (ownerSummaryLink) {
+        ownerSummaryLink.href = ownerUrl;
+    }
 }
 
-function setResultPage(ownerName, playerName, attemptId) {
+function renderHistory(items, emptyTitle, emptyText) {
+    if (!historyList) {
+        return;
+    }
+
+    historyList.innerHTML = items.length > 0
+        ? items.map(item => `
+            <li>
+                <strong>${item.playerName}</strong> scored ${item.score}/${item.total}
+                <small>on ${item.ownerName}'s quiz - ${item.playedAt}</small>
+            </li>
+        `).join("")
+        : `<li><strong>${emptyTitle}</strong><small>${emptyText}</small></li>`;
+}
+
+function setResultPage(ownerName, playerName, attemptId, activeQuizId, quizAnswers, guesses) {
     const isOwnerMode = params.get("mode") === "owner";
-    const ownedQuiz = readOwnedQuiz(quizId);
-    const savedAttempt = readDeviceAttempt(quizId);
-    let quiz = readArray("quiz");
-    let guesses = readArray("guesses");
+    const ownedQuiz = readOwnedQuiz(activeQuizId);
+    const savedAttempt = readDeviceAttempt(activeQuizId);
+    let quiz = quizAnswers;
+    let playerGuesses = guesses;
 
     if (!scoreBox || !resultList) {
         return;
@@ -412,18 +381,18 @@ function setResultPage(ownerName, playerName, attemptId) {
 
     if (!isOwnerMode && quiz.length === 0 && savedAttempt?.quiz?.length) {
         quiz = savedAttempt.quiz;
-        guesses = savedAttempt.guesses || [];
+        playerGuesses = savedAttempt.guesses || [];
     }
 
     if (isOwnerMode) {
-        const localAttempts = historyForQuiz(quizId);
+        const localAttempts = historyForQuiz(activeQuizId);
 
         if (quizTitle) {
             quizTitle.textContent = ownerName ? `${ownerName}'s Quiz Summary` : "Quiz Summary";
         }
 
         if (quizSubtitle) {
-            quizSubtitle.textContent = "This page shows only plays saved on this device.";
+            quizSubtitle.textContent = "This page shows only scores saved on this device/browser.";
         }
 
         scoreBox.textContent = localAttempts.length > 0
@@ -439,24 +408,18 @@ function setResultPage(ownerName, playerName, attemptId) {
         `).join("");
 
         if (historyNote) {
-            historyNote.textContent = "Friends playing on other devices are not visible without a backend/database.";
+            historyNote.textContent = "Scores from other devices are not collected in this frontend-only version.";
         }
 
-        if (historyList) {
-            historyList.innerHTML = localAttempts.length > 0
-                ? localAttempts.map(item => `
-                    <li>
-                        <strong>${item.playerName}</strong> scored ${item.score}/${item.total}
-                        <small>on ${item.ownerName}'s quiz - ${item.playedAt}</small>
-                    </li>
-                `).join("")
-                : `<li><strong>No local plays yet</strong><small>When someone finishes this quiz on this device, it will appear here.</small></li>`;
-        }
-
+        renderHistory(
+            localAttempts,
+            "No local plays yet",
+            "When someone finishes this quiz on this device, it will appear here."
+        );
         return;
     }
 
-    if (quiz.length === 0 || guesses.length === 0) {
+    if (quiz.length === 0 || playerGuesses.length === 0) {
         if (quizTitle) {
             quizTitle.textContent = "Your Result";
         }
@@ -469,11 +432,11 @@ function setResultPage(ownerName, playerName, attemptId) {
     let score = 0;
 
     const items = quiz.map((answer, index) => {
-        const guess = guesses[index];
+        const guess = playerGuesses[index];
         const isCorrect = guess === answer;
 
         if (isCorrect) {
-            score++;
+            score += 1;
         }
 
         return `
@@ -486,15 +449,11 @@ function setResultPage(ownerName, playerName, attemptId) {
     }).join("");
 
     if (quizTitle) {
-        quizTitle.textContent = playerName
-            ? `${playerName}'s Result`
-            : "Your Result";
+        quizTitle.textContent = playerName ? `${playerName}'s Result` : "Your Result";
     }
 
     if (quizSubtitle) {
-        quizSubtitle.textContent = ownerName
-            ? `Quiz owner: ${ownerName}`
-            : "Quiz owner: Unknown";
+        quizSubtitle.textContent = ownerName ? `Quiz owner: ${ownerName}` : "Quiz owner: Unknown";
     }
 
     scoreBox.textContent = `${playerName || "You"} scored ${score} out of ${quiz.length} on ${formatQuizOwner(ownerName)}.`;
@@ -502,19 +461,19 @@ function setResultPage(ownerName, playerName, attemptId) {
 
     saveDeviceAttempt({
         id: attemptId || createAttemptId(),
-        quizId,
+        quizId: activeQuizId,
         ownerName: ownerName || "Unknown",
         playerName: playerName || "Anonymous",
         score,
         total: quiz.length,
         quiz,
-        guesses,
+        guesses: playerGuesses,
         playedAt: new Date().toLocaleString()
     });
 
     saveHistory({
         id: attemptId || `${ownerName}-${playerName}-${score}-${quiz.length}`,
-        quizId,
+        quizId: activeQuizId,
         ownerName: ownerName || "Unknown",
         playerName: playerName || "Anonymous",
         score,
@@ -523,42 +482,29 @@ function setResultPage(ownerName, playerName, attemptId) {
     });
 
     if (historyNote) {
-        historyNote.textContent = "Only scores saved on this device are visible here. A global scoreboard would need a backend.";
+        historyNote.textContent = "Only scores saved on this device are visible here in the frontend-only version.";
     }
 
-    if (historyList) {
-        const history = historyForQuiz(quizId);
-
-        historyList.innerHTML = history.length > 0
-            ? history.map(item => `
-                <li>
-                    <strong>${item.playerName}</strong> scored ${item.score}/${item.total}
-                    <small>on ${item.ownerName}'s quiz - ${item.playedAt}</small>
-                </li>
-            `).join("")
-            : `<li><strong>No local history yet</strong><small>This device will remember the completed result for this quiz.</small></li>`;
-    }
+    renderHistory(
+        historyForQuiz(activeQuizId),
+        "No local history yet",
+        "This device will remember the completed result for this quiz."
+    );
 }
 
-const ownerName = readText("owner");
-const playerName = readText("player");
-const attemptId = readText("attempt");
-const quizId = readText("quizId");
-const isPlayMode = params.get("mode") === "play" && params.has("quiz");
-
-function redirectToStoredResultIfNeeded() {
-    if (!questionNumber || !quizId || !isPlayMode) {
+function redirectToStoredResultIfNeeded(isPlayMode, ownerName, activeQuizId, playerName) {
+    if (!questionNumber || !activeQuizId || !isPlayMode) {
         return false;
     }
 
-    const ownedQuiz = readOwnedQuiz(quizId);
-    const savedAttempt = readDeviceAttempt(quizId);
+    const ownedQuiz = readOwnedQuiz(activeQuizId);
+    const savedAttempt = readDeviceAttempt(activeQuizId);
 
     if (ownedQuiz?.answers?.length === totalQuestions && !playerName) {
         window.location.replace(buildUrl("result.html", {
             mode: "owner",
             owner: ownedQuiz.ownerName,
-            quizId,
+            quizId: activeQuizId,
             quiz: ownedQuiz.answers
         }));
         return true;
@@ -570,7 +516,7 @@ function redirectToStoredResultIfNeeded() {
             owner: savedAttempt.ownerName,
             player: savedAttempt.playerName,
             attempt: savedAttempt.id,
-            quizId,
+            quizId: activeQuizId,
             quiz: savedAttempt.quiz,
             guesses: savedAttempt.guesses
         }));
@@ -580,10 +526,19 @@ function redirectToStoredResultIfNeeded() {
     return false;
 }
 
-const redirectedToStoredResult = redirectToStoredResultIfNeeded();
+const ownerName = readText("owner");
+const playerName = readText("player");
+const attemptId = readText("attempt");
+const quizId = readText("quizId");
+const quizAnswers = readArray("quiz");
+const guesses = readArray("guesses");
+const answers = readArray("answers");
+const isPlayMode = params.get("mode") === "play" && params.has("quiz");
+
+const redirectedToStoredResult = redirectToStoredResultIfNeeded(isPlayMode, ownerName, quizId, playerName);
 const gateVisible = redirectedToStoredResult
     ? true
-    : ensureNameGate(isPlayMode, ownerName, playerName, attemptId);
+    : ensureNameGate(isPlayMode, ownerName, playerName, attemptId, quizId, quizAnswers, guesses, answers);
 
 setQuestionMeta(isPlayMode, ownerName, playerName);
 
@@ -598,11 +553,10 @@ if (options.length > 0 && questionNumber && nextPage && !gateVisible) {
             }
 
             if (isPlayMode) {
-                const quiz = readArray("quiz");
-                const guesses = readArray("guesses");
+                const nextGuesses = [...guesses];
                 const destinationPage = questionNumber === totalQuestions ? "result.html" : nextPage;
 
-                guesses[questionNumber - 1] = value;
+                nextGuesses[questionNumber - 1] = value;
 
                 window.location.href = buildUrl(destinationPage, {
                     mode: "play",
@@ -610,26 +564,26 @@ if (options.length > 0 && questionNumber && nextPage && !gateVisible) {
                     player: playerName,
                     attempt: attemptId || createAttemptId(),
                     quizId: activeQuizId,
-                    quiz,
-                    guesses
+                    quiz: quizAnswers,
+                    guesses: nextGuesses
                 });
-            } else {
-                const answers = readArray("answers");
-
-                answers[questionNumber - 1] = value;
-
-                window.location.href = buildUrl(nextPage, {
-                    owner: ownerName,
-                    quizId: activeQuizId,
-                    answers
-                });
+                return;
             }
+
+            const nextAnswers = [...answers];
+            nextAnswers[questionNumber - 1] = value;
+
+            window.location.href = buildUrl(nextPage, {
+                owner: ownerName,
+                quizId: activeQuizId,
+                answers: nextAnswers
+            });
         });
     });
 }
 
 if (shareLink || shareLinkField) {
-    setSharePage(ownerName);
+    setSharePage(ownerName, quizId, answers);
 }
 
 if (copyLinkBtn) {
@@ -650,5 +604,5 @@ if (copyLinkBtn) {
 }
 
 if (scoreBox && resultList) {
-    setResultPage(ownerName, playerName, attemptId);
+    setResultPage(ownerName, playerName, attemptId, quizId, quizAnswers, guesses);
 }

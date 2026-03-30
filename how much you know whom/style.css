@@ -719,3 +719,93 @@ background-repeat: no-repeat;
 .secondary-link:active {
   transform: scale(0.97);
 }
+.guitar{
+background-repeat: no-repeat;
+  background-image: url("imagesfile/guitar.jpg");
+  background-size: cover;
+  background-position: center;
+   align-items: flex-start;
+  justify-content: center;
+  color: black;
+}
+.piano{
+background-repeat: no-repeat;
+  background-image: url("imagesfile/piano.jpg");
+  background-size: cover;
+  background-position: center;
+   align-items: flex-start;
+  justify-content: center;
+  color: black;
+}
+.violin{
+background-repeat: no-repeat;
+  background-image: url("imagesfile/violen.avif");
+  background-size: cover;
+  background-position: center;
+   align-items: flex-start;
+  justify-content: center;
+  color: black;
+}
+.flute{
+background-repeat: no-repeat;
+  background-image: url("imagesfile/flute.jpg");
+  background-size: cover;
+  background-position: center;
+   align-items: flex-start;
+  justify-content: center;
+  color: black;
+}
+.drum{
+background-repeat: no-repeat;
+  background-image: url("imagesfile/drum.jpg");
+  background-size: cover;
+  background-position: center;
+   align-items: flex-start;
+  justify-content: center;
+  color: black;
+}
+.tabla{
+background-repeat: no-repeat;
+  background-image: url("imagesfile/table.jpg");
+  background-size: cover;
+  background-position: center;
+   align-items: flex-start;
+  justify-content: center;
+  color: black;
+}
+.hr{
+background-repeat: no-repeat;
+  background-image: url("imagesfile/8hours.webp");
+  background-size: cover;
+  background-position: center;
+   align-items: flex-start;
+  justify-content: center;
+  color: black;
+}
+.alarm{
+background-repeat: no-repeat;
+  background-image: url("imagesfile/clock.jpg");
+  background-size: cover;
+  background-position: center;
+   align-items: flex-start;
+  justify-content: center;
+  color: black;
+}
+.cross{
+background-repeat: no-repeat;
+  background-image: url("imagesfile/cross.webp");
+  background-size: cover;
+  background-position: center;
+   align-items: flex-start;
+  justify-content: center;
+  color: black;
+}
+.wrong{
+background-repeat: no-repeat;
+  background-image: url("imagesfile/wrong.webp");
+  background-size: cover;
+  background-position: center;
+   align-items: flex-start;
+  justify-content: center;
+  color: black;
+}
