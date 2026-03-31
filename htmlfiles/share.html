@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share Your Quiz</title>
+  <link rel="stylesheet" href="../jscss/style.css">
+</head>
+<body data-total="10">
+  <div class="welcome">
+    <h1 id="quizTitle">Share Your Quiz</h1>
+  </div>
+
+  <div class="share-box">
+    <p id="shareStatus">Complete the quiz to get a shareable link.</p>
+    <input id="shareLinkField" type="text" readonly placeholder="Your shareable URL will appear here">
+    <div class="share-actions">
+      <button id="copyLinkBtn" type="button">Copy Link</button>
+      <a id="shareLink" target="_blank" rel="noopener">Open shared quiz</a>
+    </div>
+    <a id="ownerSummaryLink" class="secondary-link" href="result.html">View your quiz results</a>
+    <a class="secondary-link" href="index.html">Create another quiz</a>
+  </div>
+
+  <script src="../jscss/script.js"></script>
+</body>
+</html>
